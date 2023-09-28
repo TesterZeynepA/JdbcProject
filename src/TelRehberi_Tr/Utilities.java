@@ -3,6 +3,8 @@ package TelRehberi_Tr;
 import java.sql.*;
 import java.util.ArrayList;
 
+import static TelRehberi_Tr.Runner.kayıtObj;
+
 public class Utilities { //db action yapan JDBC methods Class
 
 Connection connection = null;//*** sql query db ye göndermek için DB bağlantısı yapacak obj create edildi.
@@ -93,7 +95,7 @@ PreparedStatement pStatement=null;//*** pm'li statement obj create edildi.
 
     }
 
-    public void deleteData(Kayıt kayıtObj){
+    public void deleteData(int id){
         dBasetConnect();
         useTelefonRehberi();
         String query="delete from tel_nolar where id=?";
@@ -164,6 +166,27 @@ PreparedStatement pStatement=null;//*** pm'li statement obj create edildi.
             System.out.println(e.toString());
         }
 
+    }
+
+    public int getLastId(){//table daki son id alıp 1 fazlasını yeni id olarak atayan method
+
+        dBasetConnect();
+        useTelefonRehberi();
+        int lastId =0;
+        String query = "SELECT id FROM tel_nolar order by id desc limit 1;";
+        try {
+            ResultSet rs = statement.executeQuery(query);
+            if (rs.next()) {
+                lastId=rs.getInt("ide");
+                rs.close();
+            }
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        }finally {
+            dBClose();
+        }
+
+        return lastId;
     }
 
 
